@@ -25,6 +25,27 @@ export default function RegistrationScreen() {
   const [isFocusedLoginInput, setIsFocusedLoginInput] = useState(false);
   const [isFocusedEmailInput, setIsFocusedEmailInput] = useState(false);
   const [isFocusedPassInput, setIsFocusedPassInput] = useState(false);
+  const [email, setEmail] = useState("");
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleLogin = (text) => setLogin(text);
+  const handleEmail = (text) => setEmail(text);
+  const handlePassword = (text) => setPassword(text);
+
+  const handleSubmit = () => {
+    if (!login || !email || !password) {
+      alert("Enter all fields please!");
+      return;
+    }
+    console.log(`Login: ${login}, Email: ${email}, Password: ${password}`);
+  };
+
+  const toggleShowPassword = (event) => {
+    event.stopPropagation();
+    setShowPassword(!showPassword);
+  };
 
   useEffect(() => {
     const listenerShow = Keyboard.addListener("keyboardDidShow", () => {
@@ -77,6 +98,8 @@ export default function RegistrationScreen() {
                   styles.input,
                   isFocusedLoginInput && styles.inputFocused,
                 ]}
+                value={login}
+                onChangeText={handleLogin}
                 placeholder="Логін"
               />
               <TextInput
@@ -86,6 +109,8 @@ export default function RegistrationScreen() {
                   styles.input,
                   isFocusedEmailInput && styles.inputFocused,
                 ]}
+                value={email}
+                onChangeText={handleEmail}
                 placeholder="Адреса електронної пошти"
               />
               <TextInput
@@ -95,11 +120,21 @@ export default function RegistrationScreen() {
                   styles.input,
                   isFocusedPassInput && styles.inputFocused,
                 ]}
+                secureTextEntry={!showPassword}
+                value={password}
+                onChangeText={handlePassword}
                 placeholder="Пароль"
               />
+              <TouchableOpacity onPress={toggleShowPassword}>
+                <Text style={styles.PasswordShower}>
+                  {showPassword ? "Приховати" : "Показати"}
+                </Text>
+              </TouchableOpacity>
             </View>
             <TouchableOpacity style={styles.button}>
-              <Text style={styles.btnText}>Зареєструватися</Text>
+              <Text style={styles.btnText} onPress={handleSubmit}>
+                Зареєструватися
+              </Text>
             </TouchableOpacity>
             <Text style={styles.text}>Вже є акаунт? Увійти</Text>
           </Animated.View>
@@ -179,5 +214,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "regular",
     color: "#1B4371",
+  },
+  PasswordShower: {
+    fontSize: 16,
+    textAlign: "right",
+    fontFamily: "regular",
+    color: "#1B4371",
+    position: "absolute",
+    bottom: 35,
+    right: 20,
   },
 });

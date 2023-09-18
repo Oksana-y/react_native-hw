@@ -1,9 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 
-import RegistrationScreen from "./Screens/RegistrationScreen";
+// import RegistrationScreen from "./Screens/RegistrationScreen";
 // import PostsScreen from "./Screens/PostsScreen";
-// import LoginScreen from "./Screens/LoginScreen";
+import LoginScreen from "./Screens/LoginScreen";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -18,8 +18,8 @@ export default function App() {
 
   return (
     <>
-      <RegistrationScreen />
-      {/* <LoginScreen/> */}
+      {/* <RegistrationScreen /> */}
+      <LoginScreen />
       {/* <PostsScreen/> */}
       <StatusBar style="auto" />
     </>
