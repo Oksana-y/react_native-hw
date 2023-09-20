@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { Link } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
@@ -29,6 +31,7 @@ export default function RegistrationScreen() {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigation = useNavigation();
 
   const handleLogin = (text) => setLogin(text);
   const handleEmail = (text) => setEmail(text);
@@ -40,11 +43,16 @@ export default function RegistrationScreen() {
       return;
     }
     console.log(`Login: ${login}, Email: ${email}, Password: ${password}`);
+    navigation.navigate("Home");
   };
 
   const toggleShowPassword = (event) => {
     event.stopPropagation();
     setShowPassword(!showPassword);
+  };
+
+  const handleNavigate = () => {
+    navigation.navigate("Login");
   };
 
   useEffect(() => {
@@ -136,7 +144,12 @@ export default function RegistrationScreen() {
                 Зареєструватися
               </Text>
             </TouchableOpacity>
-            <Text style={styles.text}>Вже є акаунт? Увійти</Text>
+            <View styles={styles.commandContainer}>
+              <Text style={styles.text}>Вже є акаунт?</Text>
+              <Text style={styles.link} onPress={handleNavigate}>
+                Увійти
+              </Text>
+            </View>
           </Animated.View>
         </ScrollView>
       </View>
@@ -215,6 +228,18 @@ const styles = StyleSheet.create({
     fontWeight: "regular",
     color: "#1B4371",
   },
+  commandContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  link: {
+    fontSize: 16,
+    fontWeight: "regular",
+    color: "#1B4371",
+    textDecorationLine: "underline",
+  },
+
   PasswordShower: {
     fontSize: 16,
     textAlign: "right",
