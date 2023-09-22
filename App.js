@@ -11,6 +11,8 @@ import RegistrationScreen from "./Screens/RegistrationScreen";
 import LoginScreen from "./Screens/LoginScreen";
 import Home from "./Screens/Home";
 import { TouchableOpacity } from "react-native";
+import MapScreen from "./Screens/MapScreen";
+import CommentsScreen from "./Screens/CommentsScreen";
 
 const MainStack = createStackNavigator();
 
@@ -36,6 +38,24 @@ export default function App() {
             component={RegistrationScreen}
           />
           <MainStack.Screen name="Home" component={Home}  />
+          <MainStack.Screen
+              name="Comments"
+              component={CommentsScreen}
+              options={{
+                title: "Коментарі",
+                headerTintColor: "#212121",
+                headerTitleAlign: "center",
+              }}
+            />
+            <MainStack.Screen
+              name="Map"
+              component={MapScreen}
+              options={{
+                title: "Локація",
+                headerTintColor: "#212121",
+                headerTitleAlign: "center",
+              }}
+            />
         </MainStack.Navigator>
       </NavigationContainer>
     </>

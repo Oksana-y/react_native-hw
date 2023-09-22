@@ -1,21 +1,36 @@
-import { View, StyleSheet, ImageBackground, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ImageBackground,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import { EvilIcons, Feather } from "@expo/vector-icons";
 import forest from "../image/forest.png";
 
-const Post = ({ image, text, message, location }) => {
+const Post = ({ photo, text, message, location }) => {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={forest}
+        // source={{ uri: photo.uri }}
         style={styles.postImage}
       ></ImageBackground>
       <Text style={styles.postText}>{text}</Text>
       <View style={styles.postInfoContainer}>
         <View style={styles.postInfo}>
-          <Feather name="message-circle" size={18} color="gray" />
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Comments", { data: info })}
+          >
+            <Feather name="message-circle" size={18} color="gray" />
+          </TouchableOpacity>
         </View>
+
         <View style={styles.postInfo}>
-          <EvilIcons name="location" size={24} color="gray" />
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Map", { location })}
+          >
+            <EvilIcons name="location" size={24} color="gray" />
+          </TouchableOpacity>
           <Text style={styles.postInfoLocation}>{location}</Text>
         </View>
       </View>

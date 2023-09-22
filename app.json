@@ -23,6 +23,7 @@
         "backgroundColor": "#ffffff"
       }
     },
+    "android.config.googleMaps.apiKey": "AIzaSyBjW_wBTI7Dk-8w5wMvp8mNT4GrhuXDKcY",
     "web": {
       "favicon": "./assets/favicon.png"
     }
