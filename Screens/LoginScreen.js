@@ -15,8 +15,9 @@ import {
   Platform,
   Animated,
 } from "react-native";
-
 import background from "../image/background.png";
+import { useDispatch, useSelector } from "react-redux";
+import { signin } from "../redux/operations";
 
 export default function LoginScreen() {
   const [shift, setShift] = useState(false);
@@ -27,6 +28,9 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const isLogined = useSelector((state) => state.main.user);
+  
 
   const handleEmail = (text) => setEmail(text);
   const handlePassword = (text) => setPassword(text);
@@ -36,9 +40,17 @@ export default function LoginScreen() {
       alert("Enter all fields please!");
       return;
     }
-    console.log(`Email: ${email}, Password: ${password}`);
-    navigation.navigate("Home");
+      dispatch(signin({ email, password })).then((r) => {
+      console.log(r);
+      navigation.navigate("Home");
+    });
   };
+
+  useEffect(() => {
+    if (isLogined) {
+      navigation.navigate("Home");
+    }
+  }, [isLogined]);
 
   const toggleShowPassword = (event) => {
     event.stopPropagation();

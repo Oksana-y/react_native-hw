@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
-
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
@@ -12,8 +13,8 @@ import {
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { createpost, getposts } from "../redux/operations";
 
 const CreatePost = () => {
   const navigation = useNavigation();
@@ -23,7 +24,8 @@ const CreatePost = () => {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [photo, setPhoto] = useState("");
   const [locationName, setLocationName] = useState("");
-  const [namePic, setNamePic] = useState("");
+  const [namePhoto, setNamePhoto] = useState("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
@@ -56,43 +58,43 @@ const CreatePost = () => {
   }
 
   const handleMakePhoto = async () => {
-    async () => {
-      if (cameraRef) {
-        const { uri } = await cameraRef.takePictureAsync();
-        // await MediaLibrary.createAssetAsync(uri);
-        setPhoto(uri);
-      }
-    };
+    if (cameraRef) {
+      const { uri } = await cameraRef.takePictureAsync();
+      // await MediaLibrary.createAssetAsync(uri);
+      setPhoto(uri);
+    }
   };
 
-
-  const addPost = data => {
+  const addPost = () => {
+    if (!locationName || !namePhoto || !photo) {
+      alert("Enter all field please!");
+      return;
+    }
     const newPost = {
       photo,
       location,
       locationName,
-      namePic
+      namePhoto,
+    };
+    dispatch(createpost(newPost));
+    console.log(newPost);
+    navigation.navigate("Posts");
+    handleResetData();
+    dispatch(getposts());
   };
-  
 
-  navigation.navigate("Posts")
-  handleResetData();
-  }
-
-  const handleResetData=()=>{
+  const handleResetData = () => {
     setPhoto("");
-    setNamePic("");
+    setNamePhoto("");
     setLocationName("");
-      }
-
-
+  };
 
   return (
     <View style={styles.postContainer}>
       <View style={styles.photoContainer}>
-      <View style={styles.postImage}>
-        <Camera style={styles.camera} type={type} ref={setCameraRef}>
-          {/* <View style={styles.photoView}> */}
+        <View style={styles.postImage}>
+          <Camera style={styles.camera} type={type} ref={setCameraRef}>
+            {/* <View style={styles.photoView}> */}
             <TouchableOpacity
               style={styles.flipContainer}
               onPress={() => {
@@ -108,21 +110,21 @@ const CreatePost = () => {
             <TouchableOpacity style={styles.button} onPress={handleMakePhoto}>
               <FontAwesome name="camera" size={24} color="#BDBDBD" />
             </TouchableOpacity>
-          {/* </View> */}
-        </Camera>
-      </View>
-      <Text style={styles.postText}>
-        {" "}
-        {photo ? "Редагувати фото" : "Завантажте фото "}
-      </Text>
+            {/* </View> */}
+          </Camera>
+        </View>
+        <Text style={styles.postText}>
+          {" "}
+          {photo ? "Редагувати фото" : "Завантажте фото "}
+        </Text>
       </View>
 
       <View style={styles.postForm}>
         <TextInput
           style={styles.input}
           placeholder="Назва... "
-          value={namePic}
-          onChangeText={setNamePic}
+          value={namePhoto}
+          onChangeText={setNamePhoto}
         />
         <TextInput
           style={[styles.input, { paddingLeft: 25 }]}
@@ -130,7 +132,7 @@ const CreatePost = () => {
           value={locationName}
           onChangeText={setLocationName}
         />
-        <TouchableOpacity style={styles.postBtn} activeOpacity={0.5}>
+        <TouchableOpacity style={styles.postBtn} onPress={addPost}>
           <Text style={styles.postBtnText}>Опублікувати</Text>
         </TouchableOpacity>
         <AntDesign
@@ -157,7 +159,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     textAlign: "left",
   },
-  photoContainer:{
+  photoContainer: {
     width: 343,
   },
   postImage: {
@@ -244,6 +246,11 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
+  },
+  flipContainer: {
+    position: "absolute",
+    top: 4,
+    left: 8,
   },
 });
 

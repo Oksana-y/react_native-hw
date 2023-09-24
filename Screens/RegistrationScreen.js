@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Link } from "@react-navigation/native";
+// import { Link } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
@@ -16,6 +16,8 @@ import {
   Platform,
   Animated,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { signup } from "../redux/operations";
 
 import background from "../image/background.png";
 import avatar from "../image/avatar.png";
@@ -32,6 +34,7 @@ export default function RegistrationScreen() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const handleLogin = (text) => setLogin(text);
   const handleEmail = (text) => setEmail(text);
@@ -42,8 +45,9 @@ export default function RegistrationScreen() {
       alert("Enter all fields please!");
       return;
     }
-    console.log(`Login: ${login}, Email: ${email}, Password: ${password}`);
-    navigation.navigate("Home");
+    dispatch(signup({ email, password })).then(() =>
+      navigation.navigate("Home")
+    );
   };
 
   const toggleShowPassword = (event) => {

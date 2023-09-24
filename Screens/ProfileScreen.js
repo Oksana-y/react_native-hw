@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
   ImageBackground,
@@ -16,12 +16,21 @@ import avatar from "../image/avatar.png";
 import background from "../image/background.png";
 import forest from "../image/forest.png";
 import addBtn from "../image/add.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { getposts, signout } from "../redux/operations";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
+  const data = useSelector((state) => state.main);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getposts());
+  }, []);
 
   const handleLogOut = () => {
-    navigation.navigate("Login");
+    // navigation.navigate("Login");
+    dispatch(signout()).then(() => navigation.navigate("Login"));
   };
 
   return (
@@ -48,14 +57,23 @@ const ProfileScreen = () => {
                 <Feather name="log-out" size={24} color="gray" />
               </TouchableOpacity>
               <Text style={styles.title}>Natali Romanova</Text>
-              {data.map((elem) => (
+              {/* {data.map((elem) => (
                 <Post
                   key={elem.id}
                   image={forest}
                   text={elem.name}
                   location={elem.location}
                 />
-              ))}
+              ))} */}
+              {data?.posts?.length > 0 && (
+                <View style={styles.listContainer}>
+                  <FlatList
+                    data={data.posts}
+                    renderItem={({ item }) => <PostCard info={item} />}
+                    keyExtractor={(item) => item.id}
+                  />
+                </View>
+              )}
             </View>
           </View>
         </ImageBackground>
@@ -175,6 +193,11 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     fontSize: 16,
     lineHeight: 19,
+  },
+  listContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

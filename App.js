@@ -6,6 +6,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 
+import { PersistGate } from "redux-persist/integration/react";
+import { Provider, useSelector } from "react-redux";
+import { store, persistor } from "./redux/store";
+
 import RegistrationScreen from "./Screens/RegistrationScreen";
 // import PostsScreen from "./Screens/PostsScreen";
 import LoginScreen from "./Screens/LoginScreen";
@@ -15,6 +19,8 @@ import MapScreen from "./Screens/MapScreen";
 import CommentsScreen from "./Screens/CommentsScreen";
 
 const MainStack = createStackNavigator();
+
+// const AuthStack = createStackNavigator();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -29,35 +35,41 @@ export default function App() {
 
   return (
     <>
-      <NavigationContainer>
-        <MainStack.Navigator initialRouteName="LoginScreen"
-        screenOptions={{headerShown: false}}>
-          <MainStack.Screen name="Login" component={LoginScreen} />
-          <MainStack.Screen
-            name="Registration"
-            component={RegistrationScreen}
-          />
-          <MainStack.Screen name="Home" component={Home}  />
-          <MainStack.Screen
-              name="Comments"
-              component={CommentsScreen}
-              options={{
-                title: "Коментарі",
-                headerTintColor: "#212121",
-                headerTitleAlign: "center",
-              }}
-            />
-            <MainStack.Screen
-              name="Map"
-              component={MapScreen}
-              options={{
-                title: "Локація",
-                headerTintColor: "#212121",
-                headerTitleAlign: "center",
-              }}
-            />
-        </MainStack.Navigator>
-      </NavigationContainer>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <NavigationContainer>
+            <MainStack.Navigator
+              initialRouteName="LoginScreen"
+              screenOptions={{ headerShown: false }}
+            >
+              <MainStack.Screen name="Login" component={LoginScreen} />
+              <MainStack.Screen
+                name="Registration"
+                component={RegistrationScreen}
+              />
+              <MainStack.Screen name="Home" component={Home} />
+              <MainStack.Screen
+                name="Comments"
+                component={CommentsScreen}
+                options={{
+                  title: "Коментарі",
+                  headerTintColor: "#212121",
+                  headerTitleAlign: "center",
+                }}
+              />
+              <MainStack.Screen
+                name="Map"
+                component={MapScreen}
+                options={{
+                  title: "Локація",
+                  headerTintColor: "#212121",
+                  headerTitleAlign: "center",
+                }}
+              />
+            </MainStack.Navigator>
+          </NavigationContainer>
+        </PersistGate>
+      </Provider>
     </>
   );
 }

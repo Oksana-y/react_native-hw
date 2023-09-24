@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getposts } from "../redux/operations";
 import {
   SafeAreaView,
   ScrollView,
@@ -6,32 +8,53 @@ import {
   View,
   Image,
   Text,
+  FlatList,
 } from "react-native";
 import Post from "../components/Post";
-import data from "../source/data";
-import background from "../image/background.png";
+
 import avatar from "../image/avatar.png";
 
-const PostsScreen = () => {
+const PostsScreen = ({ user }) => {
+  const data = useSelector((state) => state.main);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getposts());
+  }, []);
+
+  useEffect(() => {
+    console.log(data,"data");
+  }, [data]);
+  
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView >
+      <ScrollView>
         <View style={styles.UserContainer}>
           <Image source={avatar} style={styles.avatar} />
           <View style={styles.userInfo}>
-            <Text style={styles.name}>Natali Romanova</Text>
-            <Text style={styles.email}>email@example.com</Text>
+            <Text style={styles.name}>{data.user?.name}</Text>
+            <Text style={styles.email}>{data.user?.email}</Text>
           </View>
         </View>
 
-        {data.map((el) => (
+        {data.posts.length > 0 && (
+          <View style={styles.listContainer}>
+            <FlatList
+              data={data.posts}
+              renderItem={({ item }) => <Post info={item.data} />}
+              keyExtractor={(item) => item.id}
+            />
+          </View>
+        )}
+
+        {/* {data.map((el) => (
           <Post
             key={el.id}
             img={background}
             text={el.name}
             location={el.location}
           />
-        ))}
+        ))} */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -43,7 +66,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     overflow: "visible",
     backgroundColor: "#FFFFFF",
-    
   },
   UserContainer: {
     display: "flex",
@@ -51,7 +73,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 32,
     marginTop: 32,
-    marginLeft:8,
+    marginLeft: 8,
   },
   userInfo: {
     display: "flex",
@@ -73,6 +95,11 @@ const styles = StyleSheet.create({
     color: "rgba(33, 33, 33, 0.80)",
     fontSize: 11,
     fontWeight: "normal",
+  },
+  listContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

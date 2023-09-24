@@ -7,19 +7,27 @@ import {
 } from "react-native";
 import { EvilIcons, Feather } from "@expo/vector-icons";
 import forest from "../image/forest.png";
+import React from "react";
+import { useNavigation } from "@react-navigation/native";
 
-const Post = ({ photo, text, message, location }) => {
+// photo,
+// location,
+// locationName,
+// namePhoto,
+
+const Post = ({ info }) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <ImageBackground
-        // source={{ uri: photo.uri }}
+        source={{ uri: info.data.photo }}
         style={styles.postImage}
       ></ImageBackground>
-      <Text style={styles.postText}>{text}</Text>
+      <Text style={styles.postText}>{info.data.namePhoto}</Text>
       <View style={styles.postInfoContainer}>
         <View style={styles.postInfo}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Comments", { data: info })}
+            onPress={() => navigation.navigate("Comments", { data: info.data })}
           >
             <Feather name="message-circle" size={18} color="gray" />
           </TouchableOpacity>
@@ -27,11 +35,13 @@ const Post = ({ photo, text, message, location }) => {
 
         <View style={styles.postInfo}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Map", { location })}
+            onPress={() =>
+              navigation.navigate("Map", { place: info.data.location })
+            }
           >
             <EvilIcons name="location" size={24} color="gray" />
           </TouchableOpacity>
-          <Text style={styles.postInfoLocation}>{location}</Text>
+          <Text style={styles.postInfoLocation}>{info.data.locationName}</Text>
         </View>
       </View>
     </View>
@@ -80,3 +90,4 @@ const styles = StyleSheet.create({
 });
 
 export default Post;
+
