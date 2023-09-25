@@ -3,11 +3,12 @@ import { useNavigation } from "@react-navigation/native";
 import {
   ImageBackground,
   SafeAreaView,
-  ScrollView,
+  FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  Dimensions,
 } from "react-native";
 import data from "../source/data";
 import Post from "../components/Post";
@@ -21,7 +22,8 @@ import { getposts, signout } from "../redux/operations";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
-  const data = useSelector((state) => state.main);
+  const { posts } = useSelector((state) => state.main);
+  console.log(posts.length);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,18 +31,17 @@ const ProfileScreen = () => {
   }, []);
 
   const handleLogOut = () => {
-    // navigation.navigate("Login");
     dispatch(signout()).then(() => navigation.navigate("Login"));
   };
 
   return (
-    <SafeAreaView>
-      <ScrollView>
+    <SafeAreaView style={styles.container}>
+      <View>
         <ImageBackground source={background} style={styles.bgImage}>
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
-            <View style={styles.container}>
+            <View style={styles.blockContainer}>
               <View style={styles.imageContainer}>
                 <ImageBackground
                   source={avatar}
@@ -53,23 +54,16 @@ const ProfileScreen = () => {
                   ></ImageBackground>
                 </TouchableOpacity>
               </View>
+
               <TouchableOpacity style={styles.logoutBtn} onPress={handleLogOut}>
                 <Feather name="log-out" size={24} color="gray" />
               </TouchableOpacity>
               <Text style={styles.title}>Natali Romanova</Text>
-              {/* {data.map((elem) => (
-                <Post
-                  key={elem.id}
-                  image={forest}
-                  text={elem.name}
-                  location={elem.location}
-                />
-              ))} */}
-              {data?.posts?.length > 0 && (
+              {posts?.length > 0 && (
                 <View style={styles.listContainer}>
                   <FlatList
-                    data={data.posts}
-                    renderItem={({ item }) => <PostCard info={item} />}
+                    data={posts}
+                    renderItem={({ item }) => <Post info={item} />}
                     keyExtractor={(item) => item.id}
                   />
                 </View>
@@ -77,35 +71,41 @@ const ProfileScreen = () => {
             </View>
           </View>
         </ImageBackground>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
 
+const screenSize = Dimensions.get("screen");
+
 const styles = StyleSheet.create({
-  scrollContainer: {
+  container: {
     justifyContent: "flex-start",
     alignItems: "center",
-    width: "100%",
+    overflow: "visible",
     backgroundColor: "#FFFFFF",
-    borderTopRightRadius: 25,
-    borderTopLeftRadius: 25,
   },
   logoutBtn: {
     marginLeft: 350,
     marginTop: -40,
   },
-  container: {
-    backgroundColor: "#FFFFFF",
+  background: {
+    top: 0,
+    position: "absolute",
+    height: screenSize.height,
+    width: screenSize.width,
+  },
+  blockContainer: {
+    flex: 1,
+    marginTop: 102,
     alignItems: "center",
-    width: "100%",
+    paddingTop: 22,
+    paddingHorizontal: 16,
+    backgroundColor: "#fff",
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
-    marginTop: 200,
   },
-  containerKeyboard: {
-    justifyContent: "flex-end",
-  },
+
   imageContainer: {
     marginTop: -60,
     height: 120,
@@ -188,12 +188,12 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginBottom: 66,
   },
-  loginLinkText: {
-    fontStyle: "normal",
-    fontWeight: "400",
-    fontSize: 16,
-    lineHeight: 19,
-  },
+  // loginLinkText: {
+  //   fontStyle: "normal",
+  //   fontWeight: "400",
+  //   fontSize: 16,
+  //   lineHeight: 19,
+  // },
   listContainer: {
     flex: 1,
     alignItems: "center",

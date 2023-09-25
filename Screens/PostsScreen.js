@@ -14,48 +14,35 @@ import Post from "../components/Post";
 
 import avatar from "../image/avatar.png";
 
-const PostsScreen = ({ user }) => {
-  const data = useSelector((state) => state.main);
+const PostsScreen = () => {
+  const { posts, user } = useSelector((state) => state.main);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getposts());
   }, []);
 
-  useEffect(() => {
-    console.log(data,"data");
-  }, [data]);
-  
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <View>
         <View style={styles.UserContainer}>
           <Image source={avatar} style={styles.avatar} />
           <View style={styles.userInfo}>
-            <Text style={styles.name}>{data.user?.name}</Text>
-            <Text style={styles.email}>{data.user?.email}</Text>
+            <Text style={styles.name}>{user?.name}</Text>
+            <Text style={styles.email}>{user?.email}</Text>
           </View>
         </View>
 
-        {data.posts.length > 0 && (
+        {posts?.length > 0 && (
           <View style={styles.listContainer}>
             <FlatList
-              data={data.posts}
-              renderItem={({ item }) => <Post info={item.data} />}
+              data={posts}
+              renderItem={({ item }) => <Post info={item} />}
               keyExtractor={(item) => item.id}
             />
           </View>
         )}
-
-        {/* {data.map((el) => (
-          <Post
-            key={el.id}
-            img={background}
-            text={el.name}
-            location={el.location}
-          />
-        ))} */}
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };

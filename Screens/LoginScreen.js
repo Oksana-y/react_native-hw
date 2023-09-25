@@ -14,6 +14,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Animated,
+  Alert,
 } from "react-native";
 import background from "../image/background.png";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,19 +31,32 @@ export default function LoginScreen() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const isLogined = useSelector((state) => state.main.user);
-  
 
   const handleEmail = (text) => setEmail(text);
   const handlePassword = (text) => setPassword(text);
 
   const handleSubmit = () => {
     if (!email || !password) {
-      alert("Enter all fields please!");
+      Alert.alert("Enter all fields please!");
       return;
     }
-      dispatch(signin({ email, password })).then((r) => {
+    dispatch(signin({ email, password })).then((r) => {
+      if (!r.error) {
+        navigation.navigate("Home");
+        setEmail("");
+        setPassword("");
+        
+      } else {
+        Alert.alert("errorLogin", r.payload, [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
+      }
       console.log(r);
-      navigation.navigate("Home");
     });
   };
 

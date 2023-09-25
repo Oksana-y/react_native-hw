@@ -1,28 +1,17 @@
-import {
-  View,
-  StyleSheet,
-  ImageBackground,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
 import { EvilIcons, Feather } from "@expo/vector-icons";
-import forest from "../image/forest.png";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 
-// photo,
-// location,
-// locationName,
-// namePhoto,
-
 const Post = ({ info }) => {
   const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
-      <ImageBackground
-        source={{ uri: info.data.photo }}
+      <Image
+        source={{ uri: info.data.photo || "https://picsum.photos/200/300" }}
         style={styles.postImage}
-      ></ImageBackground>
+      />
       <Text style={styles.postText}>{info.data.namePhoto}</Text>
       <View style={styles.postInfoContainer}>
         <View style={styles.postInfo}>
@@ -63,6 +52,7 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 8,
     overflow: "hidden",
+    backgroundColor: "red",
   },
   postText: {
     textAlign: "left",
@@ -90,4 +80,3 @@ const styles = StyleSheet.create({
 });
 
 export default Post;
-

@@ -19,6 +19,7 @@ import { db } from "../config";
 export const signin = createAsyncThunk(
   "signin",
   async ({ email, password }, thunkAPI) => {
+    console.log(email, password);
     try {
       const credentials = await signInWithEmailAndPassword(
         auth,

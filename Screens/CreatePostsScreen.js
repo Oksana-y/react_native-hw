@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
+
 import {
   StyleSheet,
   Text,
@@ -15,6 +16,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { createpost, getposts } from "../redux/operations";
+import { db, storage } from "../config";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const CreatePost = () => {
   const navigation = useNavigation();
@@ -26,6 +29,8 @@ const CreatePost = () => {
   const [locationName, setLocationName] = useState("");
   const [namePhoto, setNamePhoto] = useState("");
   const dispatch = useDispatch();
+
+  console.log("photo", photo);
 
   useEffect(() => {
     (async () => {
@@ -60,24 +65,49 @@ const CreatePost = () => {
   const handleMakePhoto = async () => {
     if (cameraRef) {
       const { uri } = await cameraRef.takePictureAsync();
-      // await MediaLibrary.createAssetAsync(uri);
       setPhoto(uri);
     }
   };
 
-  const addPost = () => {
+  const fileNameArr = photo.split("/");
+  const fileName = fileNameArr[fileNameArr.length - 1];
+
+  const loadImg = async (img) => {
+    try {
+      // Загрузка изображения с удаленного URL
+      const response = await fetch(img);
+      const file = await response.blob();
+
+      // Определение ссылки на хранилище для фотографии
+      const photoRef = ref(storage, `photos/${fileName}`);
+
+      // Загрузка фотографии в хранилище
+      await uploadBytes(photoRef, file);
+
+      // Получение URL загруженной фотографии
+      const photoUrl = await getDownloadURL(photoRef);
+      return photoUrl;
+      // Действия после успешной загрузки изображения
+    } catch (error) {
+      console.error("Error loading image:", error);
+      // Действия в случае ошибки
+    }
+  };
+
+  const addPost = async () => {
     if (!locationName || !namePhoto || !photo) {
       alert("Enter all field please!");
       return;
     }
+    const URL = await loadImg(photo);
+
     const newPost = {
-      photo,
+      photo: URL,
       location,
       locationName,
       namePhoto,
     };
     dispatch(createpost(newPost));
-    console.log(newPost);
     navigation.navigate("Posts");
     handleResetData();
     dispatch(getposts());
@@ -94,7 +124,6 @@ const CreatePost = () => {
       <View style={styles.photoContainer}>
         <View style={styles.postImage}>
           <Camera style={styles.camera} type={type} ref={setCameraRef}>
-            {/* <View style={styles.photoView}> */}
             <TouchableOpacity
               style={styles.flipContainer}
               onPress={() => {
@@ -110,7 +139,6 @@ const CreatePost = () => {
             <TouchableOpacity style={styles.button} onPress={handleMakePhoto}>
               <FontAwesome name="camera" size={24} color="#BDBDBD" />
             </TouchableOpacity>
-            {/* </View> */}
           </Camera>
         </View>
         <Text style={styles.postText}>

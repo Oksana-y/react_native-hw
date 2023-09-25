@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-// import { Link } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
@@ -48,6 +47,9 @@ export default function RegistrationScreen() {
     dispatch(signup({ email, password })).then(() =>
       navigation.navigate("Home")
     );
+    setLogin("");
+    setEmail("");
+    setPassword("");
   };
 
   const toggleShowPassword = (event) => {

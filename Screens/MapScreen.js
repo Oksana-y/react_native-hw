@@ -25,7 +25,7 @@ export default function MapScreen() {
         style={styles.mapStyle}
         provider={PROVIDER_GOOGLE}
         region={{
-          ...placeLocation,
+          ...place,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
