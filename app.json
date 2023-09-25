@@ -21,11 +21,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.yoksana.react_native_hw"
     },
     "android.config.googleMaps.apiKey": "AIzaSyBjW_wBTI7Dk-8w5wMvp8mNT4GrhuXDKcY",
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d015786f-90c1-42b5-a485-0be67f2d6fae"
+      }
     }
   }
 }
