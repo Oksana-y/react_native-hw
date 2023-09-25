@@ -106,6 +106,8 @@ const CreatePost = () => {
       location,
       locationName,
       namePhoto,
+      likes: 0,
+      comments: [],
     };
     dispatch(createpost(newPost));
     navigation.navigate("Posts");

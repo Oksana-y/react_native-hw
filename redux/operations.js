@@ -76,13 +76,18 @@ export const updateuser = createAsyncThunk(
 
 export const createpost = createAsyncThunk(
   "createpost",
-  async ({ photo, location, locationName, namePhoto }, thunkAPI) => {
+  async (
+    { photo, location, locationName, namePhoto, likes, comments },
+    thunkAPI
+  ) => {
     try {
       await addDoc(collection(db, "posts"), {
         photo,
         location,
         locationName,
         namePhoto,
+        likes,
+        comments,
       });
     } catch (e) {
       return thunkAPI.rejectWithValue(e.message);
@@ -119,10 +124,3 @@ export const addcomment = createAsyncThunk(
     }
   }
 );
-
-// name,
-// location,
-// photo,
-// locationName,
-// likes,
-// comments,

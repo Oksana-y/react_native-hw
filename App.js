@@ -11,16 +11,12 @@ import { Provider, useSelector } from "react-redux";
 import { store, persistor } from "./redux/store";
 
 import RegistrationScreen from "./Screens/RegistrationScreen";
-// import PostsScreen from "./Screens/PostsScreen";
 import LoginScreen from "./Screens/LoginScreen";
 import Home from "./Screens/Home";
-import { TouchableOpacity } from "react-native";
 import MapScreen from "./Screens/MapScreen";
 import CommentsScreen from "./Screens/CommentsScreen";
 
 const MainStack = createStackNavigator();
-
-// const AuthStack = createStackNavigator();
 
 export default function App() {
   const [fontsLoaded] = useFonts({

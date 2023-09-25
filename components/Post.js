@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 const Post = ({ info }) => {
   const navigation = useNavigation();
 
+  
   return (
     <View style={styles.container}>
       <Image
@@ -16,9 +17,10 @@ const Post = ({ info }) => {
       <View style={styles.postInfoContainer}>
         <View style={styles.postInfo}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Comments", { data: info.data })}
+            onPress={() => navigation.navigate("Comments", { data: info })}
           >
             <Feather name="message-circle" size={18} color="gray" />
+          
           </TouchableOpacity>
         </View>
 
@@ -77,6 +79,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "normal",
   },
+  textComments: {
+    fontWeight: "regular",
+    fontSize: 16,
+    color: "#BDBDBD",
+  },
 });
 
 export default Post;
+
+
+  {/* <Text style={styles.textComments}>{info.data.comments.length}</Text> */}

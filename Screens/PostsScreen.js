@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getposts } from "../redux/operations";
 import {
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   View,
   Image,
